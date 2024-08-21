@@ -19,3 +19,22 @@ class VideoOut(VideoBase):
     class Config:
         from_attribute = True
 
+
+class EpisodeBase(BaseModel):
+    title: str = Field(..., example="第一集 xxxx")
+    duration: Optional[int] = Field(None, example="1234")
+    episode_number: Optional[int] = Field(None, example="1")
+
+
+class EpisodeCreate(EpisodeBase):
+    pass
+
+
+class EpisodeOut(EpisodeBase):
+    public_id: str
+    video_pid: str
+
+    class Config:
+        from_attribute = True
+
+
