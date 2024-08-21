@@ -38,3 +38,27 @@ class EpisodeOut(EpisodeBase):
         from_attribute = True
 
 
+class EpisodeLinkBase(BaseModel):
+    url: str
+    quality: Optional[str] = Field(None, example="720p")
+    language: Optional[str] = Field(None, example="Japanese")
+    platform: Optional[str] = Field(None, example="SomePlatform")
+
+
+class EpisodeLinkCreate(EpisodeLinkBase):
+    pass
+
+
+class EpisodeLinkOut(EpisodeLinkBase):
+    public_id: str
+    episode_pid: str
+
+    class Config:
+        from_attribute = True
+
+
+class EpisodeOutWithLinks(EpisodeOut):
+    links: list[EpisodeLinkOut] = []
+
+    class Config:
+        from_attribute = True

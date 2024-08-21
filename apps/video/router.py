@@ -42,8 +42,41 @@ async def create_episode(
     return episode
 
 
-@router.get("/videos/{video_pid}/episodes", response_model=Page[schemas.EpisodeOut], summary="取得对应分集")
+@router.get(
+    "/videos/{video_pid}/episodes",
+    response_model=Page[schemas.EpisodeOutWithLinks],
+    summary="取得对应分集"
+)
 async def get_video_episodes(video_pid: str, db: types.AsyncSession = Depends(get_db)):
     stmt = select(models.Episode).where(models.Episode.video_pid == video_pid)
     episodes = await paginate(db, stmt)
     return episodes
+
+
+@router.post(
+    "/videos/{episode_pid}/episode-links",
+    response_model=schemas.EpisodeLinkOut,
+    summary="创建分集资源"
+)
+async def create_episode_link(
+        episode_pid: str,
+        episode_link: schemas.EpisodeLinkCreate,
+        db: types.AsyncSession = Depends(get_db)
+):
+    episode = await service.VideoService.get_episode_by_pid(episode_pid, db)
+    if not episode:
+        raise HTTPException(status_code=404, detail="对应剧集不存在")
+    episode_link = models.EpisodeLink(episode=episode, **episode_link.dict())
+    db.add(episode_link)
+    await db.commit()
+    return episode_link
+
+
+@router.get(
+    "/videos/{episode_pid}/episode-links",
+    response_model=Page[schemas.EpisodeLinkOut],
+    summary="取得分集资源"
+)
+async def get_episode_links(episode_pid: str, db: types.AsyncSession = Depends(get_db)):
+    stmt = select(models.EpisodeLink).where(models.EpisodeLink.episode_pid == episode_pid)
+    return await paginate(db, stmt)
