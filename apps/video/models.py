@@ -26,7 +26,7 @@ class Episode(BaseModel):
     __tablename__ = 'episodes'
 
     id = Column(Integer, primary_key=True, index=True)
-    video_id = Column(Integer, ForeignKey('videos.public_id'))
+    video_pid = Column(String(32), ForeignKey('videos.public_id'))
     public_id = Column(String(32), unique=True, index=True, default=lambda: secrets.token_hex(16))
     title = Column(String(255), index=True, comment="分集标题")
     duration = Column(Integer, comment="分集时长（秒）")  # 时长，以秒为单位
@@ -43,7 +43,7 @@ class EpisodeLink(BaseModel):
     __tablename__ = 'episode_links'
 
     id = Column(Integer, primary_key=True, index=True)
-    episode_id = Column(Integer, ForeignKey('episodes.public_id'))
+    episode_pid = Column(String(32), ForeignKey('episodes.public_id'))
     public_id = Column(String(32), unique=True, index=True, default=lambda: secrets.token_hex(16))
     url = Column(String(255))
     quality = Column(String(24))  # 质量，如 720p, 1080p
