@@ -48,6 +48,7 @@ class EpisodeLink(BaseModel):
     url = Column(String(255))
     quality = Column(String(24))  # 质量，如 720p, 1080p
     language = Column(String(48))  # 语言，如 English, Chinese
+    platform = Column(String(50), comment="来源平台")
 
     # 关联到分集表
     episode = relationship("Episode", backref=backref("links", cascade="all, delete-orphan"))
