@@ -1,7 +1,7 @@
 import secrets
 
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Text
 from utils.model import BaseModel
 
 
@@ -13,7 +13,7 @@ class Video(BaseModel):
     id = Column(Integer, primary_key=True, index=True)
     public_id = Column(String(32), unique=True, index=True, default=lambda: secrets.token_hex(16))
     title = Column(String(255), index=True, comment="视频标题")
-    description = Column(String(255), comment="视频简介")
+    description = Column(Text, comment="视频简介")
     view_count = Column(Integer, default=0, comment="播放量")
     favorite_count = Column(Integer, default=0, comment="收藏量")
 
